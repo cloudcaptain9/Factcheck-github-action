@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Fact Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background: #f4f4f9;
+    }
+    h1 {
+      color: #333;
+    }
+    #claim {
+      width: 80%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: white;
+      border: 1px solid #ccc;
+    }
+    pre {
+      background: #eee;
+      padding: 0.5rem;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Fact Checker</h1>
+  <input type="text" id="claim" placeholder="Enter a claim to check..." />
+  <button id="checkBtn">Check Fact</button>
+  <div id="result"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

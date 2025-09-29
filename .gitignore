@@ -1,0 +1,13 @@
+# Docker stuff
+Dockerfile
+Dockerfile.txt
+docker-compose.yml
+.dockerignore
+
+# Environment
+*.env
+ backend/.env
+
+backend/.env
+
+.env
