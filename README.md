@@ -1,4 +1,3 @@
-
 #  Lie Detector AI (Fact Checker)
 
 A simple web app that uses **Flask** (Python backend) and **OpenAI API** to verify whether a statement is **True, False, or Unverifiable**.
@@ -27,8 +26,8 @@ project-root/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/lie-detector-app.git
-cd lie-detector-ai/backend
+git clone https://github.com/cloudcaptain9/factcheck-app.git
+cd factcheck-ai/backend
 ```
 
 ### 2. Create and activate a virtual environment (recommended)
