@@ -1,3 +1,5 @@
+this project is for 30 days 30 projects i hosted on linkedin, the file and folder will be editted according
+
 #  Lie Detector AI (Fact Checker)
 
 A simple web app that uses **Flask** (Python backend) and **OpenAI API** to verify whether a statement is **True, False, or Unverifiable**.
@@ -118,5 +120,11 @@ docker run -d -p 8000:8000 --name lie-detector-app lie-detector
 * Simple Flask API + frontend
 * Docker support for easy deployment
 
+
+Author
+Onyekachi Emmanuel
+DevOps Engineer | AWS | Terraform | Docker | CI/CD | Kubernetes
+https://www.linkedin/in/onyeka-godwin
+If you like this project, consider giving it a ⭐ to support!
 
 
