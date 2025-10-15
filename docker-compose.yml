@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # Backend service
+  backend:
+    image: cloudcaptain9/factcheck-backend:latest
+    # Or build locally: build: ./backend
+    container_name: factcheck-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TEST_MODE=${TEST_MODE:-false}
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+    networks:
+      - factcheck-network
+
+  # Frontend service (optional - since backend serves it)
+  # frontend:
+  #   image: yourusername/factcheck-frontend:latest
+  #   container_name: factcheck-frontend
+  #   ports:
+  #     - "8080:80"
+  #   restart: unless-stopped
+  #   networks:
+  #     - factcheck-network
+
+
+networks:
+  factcheck-network:
+    driver: bridge
