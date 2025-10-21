@@ -1,130 +1,263 @@
-this project is for 30 days 30 projects i hosted on linkedin, the file and folder will be editted according
+# Factcheck App
 
-#  Lie Detector AI (Fact Checker)
+A Flask-based fact-checking application that uses OpenAI's GPT-4 to verify claims and statements.
 
-A simple web app that uses **Flask** (Python backend) and **OpenAI API** to verify whether a statement is **True, False, or Unverifiable**.
-The app has a **frontend** (HTML/JS) and a **Flask backend** that communicates with the OpenAI API for fact-checking.
+## Features
 
+- 🔍 AI-powered fact-checking using GPT-4
+- 🐳 Fully Dockerized for easy deployment
+- 🚀 CI/CD with GitHub Actions
+- 📱 Simple and intuitive web interface
 
-## 📂 Project Structure
+## Tech Stack
+
+- **Backend**: Flask (Python 3.11)
+- **Frontend**: HTML, CSS, JavaScript
+- **AI**: OpenAI GPT-4 Mini
+- **Containerization**: Docker & Docker Compose
+- **CI/CD**: GitHub Actions
+
+## Project Structure
 
 ```
-project-root/
-│
+factcheck-app/
+├── .github/
+│   └── workflows/
+│       └── docker-publish.yml    # GitHub Actions workflow
 ├── backend/
-│   └── app.py              # Flask backend
-│
+│   ├── app.py                    # Flask application
+│   ├── requirements.txt          # Python dependencies
+│   └── .env                      # Environment variables (not in git)
 ├── frontend/
-│   ├── index.html          # Web UI
-│   └── ...                 # Any JS/CSS files
-│
-├── .env                    # Environment variables (OpenAI API Key)
-├── requirements.txt        # Python dependencies
-└── README.md               # This file
-
-
-## ⚙️ Setup & Installation
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/cloudcaptain9/factcheck-app.git
-cd factcheck-ai/backend
+│   ├── index.html               # Web interface
+│   └── script.js                # Frontend logic
+├── Dockerfile                   # Docker build instructions
+├── docker-compose.yml           # Docker Compose configuration
+├── .gitignore                   # Git ignore rules
+└── README.md                    # This file
 ```
 
-### 2. Create and activate a virtual environment (recommended)
+## Prerequisites
+
+- Docker and Docker Compose installed
+- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+- (Optional) GitHub account for CI/CD
+- (Optional) Docker Hub account for image registry
+
+## Installation & Setup
+
+### 1. Clone the Repository
 
 ```bash
+git clone https://github.com/cloudcaptain9/factcheck-github-action.git
+cd factcheck-app
+```
+
+### 2. Configure Environment Variables
+
+Create a `.env` file in the `backend/` directory:
+
+```bash
+cat > backend/.env << 'EOF'
+OPENAI_API_KEY=your-openai-api-key-here
+TEST_MODE=false
+EOF
+```
+
+Replace `your-openai-api-key-here` with your actual OpenAI API key.
+
+### 3. Run with Docker Compose
+
+```bash
+# Build and start the application
+docker-compose up -d --build
+
+# View logs
+docker-compose logs -f
+
+# Stop the application
+docker-compose down
+```
+
+### 4. Access the Application
+
+Open your browser and navigate to:
+```
+http://localhost:5000
+```
+
+## Manual Docker Commands
+
+If you prefer to use Docker directly without Compose:
+
+```bash
+# Build the image
+docker build -t factcheck-app .
+
+# Run the container
+docker run -d \
+  -p 5000:5000 \
+  --env-file backend/.env \
+  --name factcheck-app \
+  factcheck-app
+
+# View logs
+docker logs -f factcheck-app
+
+# Stop and remove
+docker stop factcheck-app
+docker rm factcheck-app
+```
+
+## Deployment
+
+### Deploy from Docker Hub
+
+After setting up GitHub Actions (see below), you can deploy from Docker Hub:
+
+```bash
+# Pull the latest image
+docker pull cloudcaptain9/factcheck-github-action.git
+
+# Run the container
+docker run -d \
+  -p 5000:5000 \
+  -e OPENAI_API_KEY=your-key-here \
+  --name factcheck-app \
+  yourusername/factcheck-app:latest
+```
+
+### GitHub Actions CI/CD
+
+The project includes automated Docker Hub deployment via GitHub Actions.
+
+**Setup:**
+
+1. Create a Docker Hub access token at https://hub.docker.com/settings/security
+
+2. Add secrets to your GitHub repository:
+   - Go to Settings → Secrets and variables → Actions
+   - Add `DOCKERHUB_USERNAME` (your Docker Hub username)
+   - Add `DOCKERHUB_TOKEN` (your access token)
+
+3. Push to main/master branch:
+   ```bash
+   git push origin main
+   ```
+
+The workflow automatically builds and pushes the image to Docker Hub.
+
+## API Endpoints
+
+### POST `/factcheck`
+
+Verify a claim using AI.
+
+**Request:**
+```json
+{
+  "claim": "The Earth is flat"
+}
+```
+
+**Response:**
+```json
+{
+  "result": "{\"verdict\": \"False\", \"reason\": \"Scientific evidence shows Earth is an oblate spheroid...\"}"
+}
+```
+
+### GET `/`
+
+Serves the web interface.
+
+## Development
+
+### Local Development without Docker
+
+```bash
+# Create virtual environment
 python -m venv venv
-source venv/bin/activate    # On Mac/Linux
-venv\Scripts\activate       # On Windows
-```
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-### 3. Install dependencies
-
-```bash
+# Install dependencies
+cd backend
 pip install -r requirements.txt
+
+# Run the application
+python app.py
 ```
 
-### 4. Add your API key
+The app will be available at `http://localhost:5000`
 
-Create a `.env` file in the **backend** folder:
+### Project Configuration
 
+- **Port**: The application runs on port 5000 by default
+- **Debug Mode**: Enabled in development (see `app.py`)
+- **Model**: Uses `gpt-4o-mini` for cost-effective fact-checking
 
-OPENAI_API_KEY=your_openai_api_key_here
+## Environment Variables
 
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `OPENAI_API_KEY` | Your OpenAI API key | Yes |
+| `TEST_MODE` | Enable test mode (true/false) | No |
 
+## Troubleshooting
 
-
-## ▶️ Running the App
-
-### Start the Flask server
+### Container won't start
 
 ```bash
-python app.py
+# Check logs
+docker logs factcheck-app
 
-
-This starts the backend at **[http://localhost:8000](http://localhost:8000)**.
-
-### Access the frontend
-
-Open your browser and go to:
- [http://localhost:8000](http://localhost:8000)
-
-
-
-## 📡 API Endpoints
-
-### `POST /factcheck`
-
-**Request body:**
-
-```json
-{
-  "claim": "The Earth is flat."
-}
+# Verify environment variables
+docker exec factcheck-app env | grep OPENAI
 ```
 
-**Response:
+### Port 5000 already in use
 
-```json
-{
-  "result": {
-    "verdict": "False",
-    "reason": "Scientific consensus and evidence confirm the Earth is round."
-  }
-}
+Change the port in `docker-compose.yml`:
+```yaml
+ports:
+  - "8080:5000"  # Access via port 8080
 ```
+
+### OpenAI API errors
+
+- Verify your API key is correct
+- Check your OpenAI account has credits
+- Ensure the `.env` file is in the `backend/` directory
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Security Notes
+
+- **Never commit `.env` files** - they contain sensitive API keys
+- The `.gitignore` file prevents accidental commits of secrets
+- Use environment variables for all sensitive data
+- Rotate your API keys regularly
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- OpenAI for the GPT-4 API
+- Flask framework
+- Docker for containerization
+
+## Support
+
+For issues, questions, or contributions, please open an issue on GitHub.
 
 ---
-## creat your own dockerfile
 
-## 🐳 Docker (Optional)
-
-Build and run with Docker:
-
-```bash
-# Build image
-docker build -t lie-detector .
-
-# Run container
-docker run -d -p 8000:8000 --name lie-detector-app lie-detector
-
-
-
-
-## ✅ Features
-
-* Fact-checks claims using OpenAI GPT models
-* Returns structured JSON (`True/False/Unverifiable`)
-* Simple Flask API + frontend
-* Docker support for easy deployment
-
-
-Author
-Onyekachi Emmanuel
-DevOps Engineer | AWS | Terraform | Docker | CI/CD | Kubernetes
-https://www.linkedin/in/onyeka-godwin
-If you like this project, consider giving it a ⭐ to support!
-
-
+**Made with ❤️ using Flask and OpenAI**
