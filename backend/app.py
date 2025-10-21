@@ -1,14 +1,14 @@
 from flask import Flask, request, jsonify, send_from_directory
-from dotenv import load_dotenv   # <--- add this
+from dotenv import load_dotenv
 from openai import OpenAI
 import os
 
 # Load .env variables
 load_dotenv()
 
-# Path to frontend folder (one level up from backend)
+# Path to frontend folder - FIXED for Docker
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FRONTEND_DIR = os.path.join(BASE_DIR, "..", "frontend")
+FRONTEND_DIR = "/app/frontend"  # Absolute path in container
 
 app = Flask(__name__)
 
@@ -61,6 +61,5 @@ def factcheck():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
