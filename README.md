@@ -173,6 +173,67 @@ Serves the web interface.
 
 ## Development
 
+
+## AWS ECS Deployment
+
+### 1. Push to ECR
+```bash
+# Authenticate to ECR
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
+
+# Tag the image
+docker tag yourusername/factcheck-app:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/factcheck-app:latest
+
+# Push to ECR
+docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/factcheck-app:latest
+```
+
+### 2. ECS Task Definition
+
+Environment variables are configured in your ECS task definition JSON:
+```json
+{
+  "containerDefinitions": [
+    {
+      "name": "factcheck-app",
+      "image": "<account-id>.dkr.ecr.us-east-1.amazonaws.com/factcheck-app:latest",
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "TEST_MODE",
+          "value": "false"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "OPENAI_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:123456789012:secret:openai-api-key"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 3. Using AWS Secrets Manager (Recommended)
+
+Store your OpenAI API key in AWS Secrets Manager:
+```bash
+# Create secret
+aws secretsmanager create-secret \
+  --name openai-api-key \
+  --secret-string "your-openai-api-key-here" \
+  --region us-east-1
+```
+
+Then reference it in your ECS task definition using the `secrets` field as shown above.
+
+
 ### Local Development without Docker
 
 ```bash
@@ -253,6 +314,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - OpenAI for the GPT-4 API
 - Flask framework
 - Docker for containerization
+
+  ## Author
+  ONYEKACHI EMMANUEL
+  https://www.linkedin.com/in/onyeka-godwin
+
 
 ## Support
 
